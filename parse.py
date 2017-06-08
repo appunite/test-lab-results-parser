@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-from Test import Test
+from test import Test
 import os
 
 def prepareListOfTestResults():
@@ -11,14 +11,18 @@ def prepareListOfTestResults():
         		if (filePath.endswith('.xml')):
         			document = ET.parse(filePath)
         			root = document.getroot()
-        			print 'Passed: ' + str((root.attrib['failures'] == '0' and root.attrib['errors'] == '0'))
         			testcase = document.find('testcase')
-        			print 'Name: ' + testcase.attrib['name'] 
+        			name = testcase.attrib['name']
+        			passed = str((root.attrib['failures'] == '0' and root.attrib['errors'] == '0'))
+        			uid = 0
+
+        			testList.append(Test(name, uid, passed))
 
 	return testList
 
 def main():
   testList = prepareListOfTestResults()
+  print len(testList)
 
 if __name__ == "__main__": 
   main()
