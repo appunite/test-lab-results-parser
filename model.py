@@ -4,6 +4,7 @@ class Device(object):
 	build = ""
 	version = ""
 	pipeline = ""
+	orientation = ""
 	lang = ""
 	duration = ""
 	start_date = ""
@@ -11,11 +12,12 @@ class Device(object):
 	device_meta = ""
 	tests = []
 
-	def __init__(self, device, build, version, pipeline, lang, duration, start_date, commiter, device_meta, tests):
+	def __init__(self, device, build, version, pipeline, orientation, lang, duration, start_date, commiter, device_meta, tests):
 		self.device = device
 		self.build = build
 		self.version = version
 		self.pipeline = pipeline
+		self.orientation = orientation
 		self.lang = lang
 		self.duration = duration
 		self.start_date = start_date
