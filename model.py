@@ -1,4 +1,3 @@
-
 class Device(object):
 
 	device = ""
@@ -24,3 +23,20 @@ class Device(object):
 		self.device_meta = device_meta
 		self.tests = tests
 
+class Tests(object):
+
+	passed = []
+	failed = []
+
+	def __init__(self, passed, failed):
+		self.passed = passed
+		self.failed = failed
+
+class Test(object):
+
+	name = ""
+	uid = 0
+
+	def __init__(self, name, uid):
+		self.name = name
+		self.uid = uid
