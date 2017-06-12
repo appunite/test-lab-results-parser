@@ -12,9 +12,6 @@ def main():
     	parser.add_argument('--destination', dest='destination', required=True, nargs='?', type=str, help='destination')
     	args = parser.parse_args()
 
-	resultsDir = '/Users/piotrmadry/Desktop/work/reports/firebase-test-lab/'
-	destinationPath = '/Users/piotrmadry/Desktop/'
-
 	results = getResults(args.source)
 	createJsonFile(args.destination, toJson(results))
 
