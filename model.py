@@ -38,7 +38,11 @@ class Test(object):
 
 	name = ""
 	uid = 0
+	duration = ""
+	fail_reason = ""
 
-	def __init__(self, name, uid):
+	def __init__(self, name, uid, duration, fail_reason):
 		self.name = name
 		self.uid = uid
+		self.duration = duration
+		self.fail_reason = fail_reason

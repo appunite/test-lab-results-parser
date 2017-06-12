@@ -15,12 +15,14 @@ def prepareTestLists(files, subdir):
 			for testcase in root.findall('testcase'):
 				name = testcase.attrib['name']
 				uid = 0
-				test = Test(name, uid)
+				duration = testcase.attrib['time']
+
 				failure = testcase.find('failure')
 				if failure is None:
+					test = Test(name, uid, duration, "")
 					passedTestList.append(test)
 				else:
-					print "Failure:" + name +" ko"
+					test = Test(name, uid, duration, failure.text[:200])
 					failedTestList.append(test)
 
 	return passedTestList, failedTestList
