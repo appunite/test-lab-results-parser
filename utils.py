@@ -12,15 +12,16 @@ def prepareTestLists(files, subdir):
 	        if (filePath.endswith('.xml')):
 	        	document = ET.parse(filePath)
 	        	root = document.getroot()
-	        	testcase = document.find('testcase')
-	        	name = testcase.attrib['name']
-	        	uid = 0
-
-	        	test = Test(name, uid)
-	        	if ((root.attrib['failures'] == '0' and root.attrib['errors'] == '0')):
-	        		passedTestList.append(test)
-	        	else:
-	        		failedTestList.append(test)
+			for testcase in root.findall('testcase'):
+				name = testcase.attrib['name']
+				uid = 0
+				test = Test(name, uid)
+				failure = testcase.find('failure')
+				if failure is None:
+					passedTestList.append(test)
+				else:
+					print "Failure:" + name
+					failedTestList.append(test)
 
 	return passedTestList, failedTestList
 
@@ -41,6 +42,7 @@ def getResults(resultsDir):
 	testResults = []
 	for subdir, dirs, files in os.walk(resultsDir, topdown=True):
 			passedTestList, failedTestList = prepareTestLists(files, subdir)
+			print subdir + " PASSED: " + str(len(passedTestList)) + " FAILED: " + str(len(failedTestList))
 			if passedTestList or failedTestList:
 				deviceMeta = getDeviceMeta(subdir)
 				tests = Tests(passedTestList, failedTestList)
