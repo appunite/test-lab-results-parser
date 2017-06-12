@@ -20,7 +20,7 @@ def prepareTestLists(files, subdir):
 				if failure is None:
 					passedTestList.append(test)
 				else:
-					print "Failure:" + name
+					print "Failure:" + name +" ko"
 					failedTestList.append(test)
 
 	return passedTestList, failedTestList
