@@ -1,5 +1,6 @@
 import os
 import codecs, json
+import time
 import xml.etree.ElementTree as ET
 from model import Device, Tests, Test
 
@@ -40,15 +41,15 @@ def createJsonFile(destinationPath, json):
 	pass
 
 
-def getResults(resultsDir):
+def getResults(resultsDir, build, version, pipeline, commiter):
 	testResults = []
+	date = time.strftime('%x')
 	for subdir, dirs, files in os.walk(resultsDir, topdown=True):
 			passedTestList, failedTestList = prepareTestLists(files, subdir)
-			print subdir + " PASSED: " + str(len(passedTestList)) + " FAILED: " + str(len(failedTestList))
 			if passedTestList or failedTestList:
 				deviceMeta = getDeviceMeta(subdir)
 				tests = Tests(passedTestList, failedTestList)
-				device = Device(deviceMeta[0], "1000", "1.0", "1000", deviceMeta[3], deviceMeta[2], "10:30", "date", "Piotr Madry", "Android, " + deviceMeta[1], tests)
+				device = Device(deviceMeta[0], build, version, pipeline, deviceMeta[3], deviceMeta[2], "00:00", date, commiter, "Android, " + deviceMeta[1], tests)
 				testResults.append(device)
 
 	return testResults
