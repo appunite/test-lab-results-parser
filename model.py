@@ -25,14 +25,6 @@ class Device(object):
 		self.device_meta = device_meta
 		self.tests = tests
 
-class Tests(object):
-
-	passed = []
-	failed = []
-
-	def __init__(self, passed, failed):
-		self.passed = passed
-		self.failed = failed
 
 class Test(object):
 
@@ -40,9 +32,13 @@ class Test(object):
 	uid = 0
 	duration = ""
 	fail_reason = ""
+	steps = []
+	is_failed = False
 
-	def __init__(self, name, uid, duration, fail_reason):
+	def __init__(self, name, uid, duration, fail_reason, steps, is_failed):
 		self.name = name
 		self.uid = uid
 		self.duration = duration
 		self.fail_reason = fail_reason
+		self.steps = steps
+		self.is_failed = is_failed
