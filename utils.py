@@ -1,13 +1,13 @@
 import os
+import re
 import codecs, json
 import time
 import xml.etree.ElementTree as ET
-from model import Device, Tests, Test
+from model import Device, Test
 
 
-def prepareTestLists(files, subdir):
-	passedTestList = []
-	failedTestList = []
+def prepareTestList(files, subdir):
+	testList = []
 	for file in files:
 	        filePath = os.path.join(subdir, file)
 	        if (filePath.endswith('.xml')):
@@ -15,21 +15,35 @@ def prepareTestLists(files, subdir):
 	        	root = document.getroot()
 			for testcase in root.findall('testcase'):
 				name = testcase.attrib['name']
-				uid = 0
 				duration = testcase.attrib['time']
-
 				failure = testcase.find('failure')
-				if failure is None:
-					test = Test(name, uid, duration, "")
-					passedTestList.append(test)
-				else:
-					test = Test(name, uid, duration, failure.text[:200])
-					failedTestList.append(test)
 
-	return passedTestList, failedTestList
+				regex = re.compile("([a-zA-Z]+)_([a-zA-Z]+)_([0-9]+)")
+				match = regex.match(str(name))
+				testId = "_".join(match.groups())
+				uid = match.group(3)
+				steps = getStepsForTest(testId, subdir)
+
+				if failure is None:
+					test = Test(name, uid, duration, "", steps, False)
+					testList.append(test)
+				else:
+					test = Test(name, uid, duration, failure.text[:200], steps, True)
+					testList.append(test)
+
+	return testList
 
 def getDeviceMeta(subdir):
 	return os.path.basename(subdir).split('-')
+
+def getStepsForTest(testId, subdir):
+	steps = []
+	file = open(os.path.join(subdir, 'logcat.txt'))
+	for line in file:
+		if 'I/' + testId in line:
+			steps.append(line.split("): ", 1)[1])
+	file.close()
+	return steps
 
 def createJsonFile(destinationPath, json):
 	if not os.path.exists(destinationPath):
@@ -45,11 +59,10 @@ def getResults(resultsDir, build, version, pipeline, commiter):
 	testResults = []
 	date = time.strftime('%x')
 	for subdir, dirs, files in os.walk(resultsDir, topdown=True):
-			passedTestList, failedTestList = prepareTestLists(files, subdir)
-			if passedTestList or failedTestList:
+			testList = prepareTestList(files, subdir)
+			if testList:
 				deviceMeta = getDeviceMeta(subdir)
-				tests = Tests(passedTestList, failedTestList)
-				device = Device(deviceMeta[0], build, version, pipeline, deviceMeta[3], deviceMeta[2], "00:00", date, commiter, "Android, " + deviceMeta[1], tests)
+				device = Device(deviceMeta[0], build, version, pipeline, deviceMeta[3], deviceMeta[2], "00:00", date, commiter, "Android, " + deviceMeta[1], testList)
 				testResults.append(device)
 
 	return testResults
