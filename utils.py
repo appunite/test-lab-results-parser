@@ -38,7 +38,7 @@ def getDeviceMeta(subdir):
 
 def getStepsForTest(testId, subdir):
 	steps = []
-	file = open(os.path.join(subdir, 'logcat.txt'))
+	file = open(os.path.join(subdir, 'logcat'))
 	for line in file:
 		if 'I/' + testId in line:
 			steps.append(line.split("): ", 1)[1])
