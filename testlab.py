@@ -6,6 +6,7 @@ def toJson(object):
 	return json.dumps(object, default=lambda o: o.__dict__,
             sort_keys=True, indent = 4)
 
+
 def main():
 	parser = argparse.ArgumentParser(description='Process files paths')
 	parser.add_argument('--source', dest='source', required=True, nargs='?', type=str, help='source')
