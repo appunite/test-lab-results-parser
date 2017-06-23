@@ -25,7 +25,6 @@ class Device(object):
 		self.device_meta = device_meta
 		self.tests = tests
 
-
 class Test(object):
 
 	name = ""
